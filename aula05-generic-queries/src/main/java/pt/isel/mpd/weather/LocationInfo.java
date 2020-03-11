@@ -1,4 +1,4 @@
-package pt.isel.mpd;
+package pt.isel.mpd.weather;
 
 public class LocationInfo {
     private final String country;
