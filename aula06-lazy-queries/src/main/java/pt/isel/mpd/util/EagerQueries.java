@@ -6,33 +6,31 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class LazyQueries {
+public class EagerQueries {
      /**
      * Versao 4
      */
     public static <T> Iterable<T> filter(Iterable<T> src, Predicate<T> pred) {
-        return null;
+        List<T> res = new ArrayList<>();
+        for (T info: src) {
+            if(pred.test(info))
+                res.add(info);
+        }
+        return res;
     }
     public static <T> Iterable<T> skip(Iterable<T> src, int nr) {
-        return () -> {
-            Iterator<T> iter = src.iterator();
-            int idx = nr;
-            while(idx-- > 0 && iter.hasNext()) iter.next();
-            return iter;
-        };
+        Iterator<T> iter = src.iterator();
+        while(nr-- > 0 && iter.hasNext()) iter.next();
+        List<T> res = new ArrayList<>();
+        while(iter.hasNext()) res.add(iter.next());
+        return res;
     }
     public static <T, R> Iterable<R> map(Iterable<T> src, Function<T, R> mapper) {
-        return () -> new Iterator<R>() {
-            Iterator<T> iter = src.iterator();
-            @Override
-            public boolean hasNext() {
-                return iter.hasNext();
-            }
-            @Override
-            public R next() {
-                return mapper.apply(iter.next());
-            }
-        };
+        List<R> res = new ArrayList<>();
+        for (T item: src) {
+            res.add(mapper.apply(item));
+        }
+        return res;
     }
 
     /**

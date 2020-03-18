@@ -27,12 +27,15 @@ public class EagerQueriesTest {
         jan = api.pastWeather(37.017, -7.933, LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1, 30));
     }
 
+    @Test public void testMaxTemperatureOnJanuary() {
+        int maxTemp = max(map(jan, WeatherInfo::getTempC));
+        assertEquals(17, maxTemp);
+    }
+
     @Test public void testMaxTemperatureOnSunnyDays() {
         int maxTemp = max(map(filter(jan, wi -> wi.getDesc().contains("Sun")), WeatherInfo::getTempC));
         assertEquals(15, maxTemp);
     }
-
-
 
     @Test public void testFilterCloudyDays() {
         Iterable<WeatherInfo> cloud = filter(jan, EagerQueriesTest::cloudyDays);
